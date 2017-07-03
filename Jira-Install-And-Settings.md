@@ -1,15 +1,7 @@
-<h1 id="jira0">Jira 安装和配置</h1>
+# Jira 安装和配置
 
-------
 
-*   [Jira 安装和配置](#jira0)
-    *   [Jira 安装](#jira1)
-    *   [Jira 配置](#jira2)
-    *   [资料](#jira3)
-    
-------
-
-<h2 id="jira1">Jira 安装</h2>
+## Jira 安装
 
 - Jira 安装
     - 官网：<https://www.atlassian.com/software/jira>
@@ -32,7 +24,7 @@
     - 设置环境变量：
         - 编辑：`vim /etc/profile`
         - 在文件尾部添加：
-        ```
+        ``` ini
         JIRA_HOME=/usr/program/jira6.3.6/data/
         export JIRA_HOME
         ```

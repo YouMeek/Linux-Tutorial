@@ -37,16 +37,21 @@
 - oh-my-zsh 帮我们整理了一些常用的 Zsh 扩展功能和主题：<https://github.com/robbyrussell/oh-my-zsh>
 - 我们无需自己去捣搞 Zsh，直接用 oh-my-zsh 就足够了，如果你想继续深造的话那再去弄。
 - 先安装 git：`sudo yum install -y git`
-- 安装 oh-my-zsh：`wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh`
+- 安装 oh-my-zsh（这个过程可能会有点慢，或者需要重试几次）：`wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh`
 - 整个过程效果如下图：
     - ![oh-my-zsh 安装](images/Zsh-a-1.jpg)
 - 在以 root 用户为前提下，oh-my-zsh 的安装目录：**/root/.oh-my-zsh**
 - 在以 root 用户为前提下，Zsh 的配置文件位置：**/root/.zshrc**
 - 为 root 用户设置 zsh 为系统默认 shell：`chsh -s /bin/zsh root`
 - 如果你要重新恢复到 bash：`chsh -s /bin/bash root`
-- 现在重启下系统：`reboot`，重启完你就可以看到你连接上 shell 效果变了，现在开头是一个箭头了，如下图：
+- 现在你关掉终端或是重新连上 shell，现在开头是一个箭头了，如下图：
     - ![oh-my-zsh 安装](images/Zsh-b-1.jpg)
 
+## Home / End 失灵问题
+
+- 虽然可以通过配置解决，但是建议还是直接记快捷键吧：
+- Home = Ctrl + a
+- End = Ctrl + e
 
 
 ## Zsh 配置
@@ -75,8 +80,12 @@
         - 进入解压后目录并安装：`cd autojump_v21.1.2/ ; ./install.sh`
         - 再执行下这个：`source /etc/profile.d/autojump.sh`
         - 编辑配置文件，添加上 autojump 的名字：`vim /root/.zshrc`
-
-
+    - `zsh-syntax-highlighting`  
+        -   这个插件会对终端命令高亮显示,比如正确的拼写会是绿色标识,否则是红色,另外对于一些shell输出语句也会有高亮显示,算是不错的辅助插件  
+        -   插件官网：<https://github.com/zsh-users/zsh-syntax-highlighting>  
+        - 安装，复制该命令：'git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting'
+		- 编辑：`vim ~/.zshrc`，找到这一行，后括号里面的后面添加：`plugins=( 前面的一些插件名称 zsh-syntax-highlighting)`
+		- 刷新下配置：`source ~/.zshrc`
 
 ### 主题
 
@@ -97,6 +106,34 @@
 ## 一些人性化功能
 
 - 呃，这个其实可以不用讲的，你自己用的时候你自己会发现的，各种便捷，特别是用 Tab 多的人一定会有各种惊喜的。
+- 使用 ctrl-r 来搜索命令历史记录。按完此快捷键后，可以输入关键命令词语，如果历史记录有含有此词语会显示出来。
+- 命令别名：
+	- 在命令行中输入 alias 可以查看已经有的命令别名
+	- 自己新增一些别名，编辑文件：`vim ~/.zshrc`，在文件加入下面格式的命令，比如以下是网友提供的一些思路：
+
+``` shell
+alias cls='clear'
+alias ll='ls -l'
+alias la='ls -a'
+alias grep="grep --color=auto"
+alias -s html='vim'   # 在命令行直接输入后缀为 html 的文件名，会在 Vim 中打开
+alias -s rb='vim'     # 在命令行直接输入 ruby 文件，会在 Vim 中打开
+alias -s py='vim'      # 在命令行直接输入 python 文件，会用 vim 中打开，以下类似
+alias -s js='vim'
+alias -s c='vim'
+alias -s java='vim'
+alias -s txt='vim'
+alias -s gz='tar -xzvf' # 在命令行直接输入后缀为 gz 的文件名，会自动解压打开
+alias -s tgz='tar -xzvf'
+alias -s zip='unzip'
+alias -s bz2='tar -xjvf'
+```
+
+
+## 差异
+
+- 我们现在增加系统变量在：/etc/profile 后，输入命令：source /etc/profile 之后，重启服务器发现刚刚的系统变量现在没效果。
+    - 解决办法：`vim ~/.zshrc`，在该配置文件里面增加一行：`source /etc/profile`，然后刷新 zsh 的配置：`source ~/.zshrc`。
 
 
 ## 资料
@@ -113,3 +150,4 @@
 - <http://blog.jobbole.com/86820/>
 - <http://uecss.com/zsh-brew-autojump-plugins-shell-for-mac.html>
 - <http://www.cnblogs.com/westfly/p/3283525.html>
+- <http://wdxtub.com/2016/02/18/oh-my-zsh/>

@@ -1,4 +1,4 @@
-#  Nexus 安装和配置
+# Nexus 安装和配置
 
 
 
@@ -25,7 +25,7 @@
         - 编辑系统配置文件：`vim /etc/profile`
         - 在文件的尾巴增加下面内容：
         
-        ```
+        ``` ini
         # Nexus
         NEXUS_HOME=/usr/program/nexus2.11.4
         export NEXUS_HOME
@@ -66,7 +66,7 @@
     - 对项目独立设置：
         - 打开项目的 pom.xml 文件：
         - 添加下面内容：
-        ```
+        ``` xml
         <repositories>
             <repository>
                 <id>Nexus</id>
@@ -78,7 +78,7 @@
     - 对全局配置进行设置：
         - 打开 maven 的 settings.xml 文件：
         - 添加下面内容：
-        ```
+        ``` xml
         <mirrors>
             <mirror>
                 <id>YouMeekNexus</id>
@@ -89,12 +89,142 @@
         </mirrors>
         ```
 
+## 本地开发的 jar 发布到 Nexus 上
+
+- 系统下的 settings.xml 下改为如下：
+
+``` xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+
+    <localRepository>D:\maven\my_local_repository</localRepository>
+
+    <pluginGroups>
+    </pluginGroups>
+
+    <proxies>
+    </proxies>
+
+
+    <!--设置 Nexus 认证信息-->
+    <servers>
+        <server>
+            <id>nexus-releases</id>
+            <username>admin</username>
+            <password>admin123</password>
+        </server>
+        <server>
+            <id>nexus-snapshots</id>
+            <username>admin</username>
+            <password>admin123</password>
+        </server>
+    </servers>
+    
+    
+    <!--设置 Nexus 镜像，后面只要本地没对应的以来，则到 Nexus 去找-->
+    <mirrors>
+        <mirror>
+            <id>nexus-releases</id>
+            <mirrorOf>*</mirrorOf>
+            <url>http://192.168.1.73:8081/repository/maven-releases/</url>
+        </mirror>
+        <mirror>
+            <id>nexus-snapshots</id>
+            <mirrorOf>*</mirrorOf>
+            <url>http://192.168.1.73:8081/repository/maven-snapshots/</url>
+        </mirror>
+        <mirror>
+            <id>aliyun-maven</id>
+            <name>aliyun maven</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <mirrorOf>central</mirrorOf>
+        </mirror>
+    </mirrors>
+
+    <profiles>
+        <profile>
+            <id>nexus</id>
+            <repositories>
+                <repository>
+                    <id>nexus-releases</id>
+                    <url>http://nexus-releases</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>nexus-snapshots</id>
+                    <url>http://nexus-snapshots</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>nexus-releases</id>
+                    <url>http://nexus-releases</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+                <pluginRepository>
+                    <id>nexus-snapshots</id>
+                    <url>http://nexus-snapshots</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>nexus</activeProfile>
+    </activeProfiles>
+    
+</settings>
+```
+
+- 在开发的项目 pom.xml 上，添加这一段：
+
+``` xml
+<distributionManagement>
+    <repository>
+        <id>nexus-releases</id>
+        <url>http://192.168.1.73:8081/repository/maven-releases/</url>
+    </repository>
+    <snapshotRepository>  
+        <id>nexus-snapshots</id>  
+        <url>http://192.168.1.73:8081/repository/maven-snapshots/</url>  
+    </snapshotRepository>  
+</distributionManagement>
+```
+
+- 然后在项目上执行：`mvn deploy`
+
 
 ## 持续集成自动构建后发布到 Nexus 上
 
 - 在 Maven 的 settings.xml 加上连接服务器信息：
 
-``` bash
+``` xml
 <!--设置私库认证信息，用户名和密码我就用默认的，如果你们有权限控制的需求可以创建对应的一些账号-->  
 <servers>  
     <server>  
@@ -113,7 +243,7 @@
 
 - 在项目的 pom.xml 文件加上：
 
-``` bash
+``` xml
 <!-- nexus-releases nexus-snapshots 与 Maven 的配置文件 settings.xml 中 server 下的 id 对应 -->  
 <distributionManagement>  
     <repository>  

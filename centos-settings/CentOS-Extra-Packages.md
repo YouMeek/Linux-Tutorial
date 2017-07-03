@@ -1,10 +1,10 @@
 # CentOS 源设置
 
-<h2 id="ubuntu">修改官方源</h2>
+## 修改官方源
 
 - 下面内容的一个简易集合版本脚本：<http://pan.baidu.com/s/1hrdnbi0>
 
-<h2 id="ubuntu22">修改官方源</h2>
+## 修改官方源
 
 > 国内常用源配置方法（该源和官方源是一样的，只是因为服务器在国内会起到加速作用而已）：
 
@@ -12,22 +12,33 @@
 - 阿里源：<http://mirrors.aliyun.com/help/centos>
 - sohu：<http://mirrors.sohu.com/help/centos.html>
 
-> 替换过程（这里以 163 源为例，系统 CentOS 6.7）：
+> CentOS 6 替换过程（这里以 163 源为例）：
 
 - 备份官网源：`sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.20151219.backup`
 - `cd /etc/yum.repos.d/`
 - 下载对应版本 repo 文件, 放入 **/etc/yum.repos.d/**
  - 下载源文件：
-    - CentOS7：`sudo wget http://mirrors.163.com/.help/CentOS7-Base-163.repo`
     - CentOS6：`sudo wget http://mirrors.163.com/.help/CentOS6-Base-163.repo`
-    - CentOS5：`sudo wget http://mirrors.163.com/.help/CentOS5-Base-163.repo`
  - `sudo mv CentOS6-Base-163.repo CentOS-Base.repo`
  - 导入key：`rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6`
  - `sudo yum clean all`
  - `sudo yum makecache`
  - `sudo yum update -y`
 
-<h2 id="ubuntu33">第三方源</h2>
+> CentOS 7 替换过程（这里以 163 源为例）：
+
+- 备份官网源：`sudo mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.20170219.backup`
+- `cd /etc/yum.repos.d/`
+- 下载对应版本 repo 文件, 放入 **/etc/yum.repos.d/**
+ - 下载源文件：
+    - CentOS7：`sudo wget http://mirrors.163.com/.help/CentOS7-Base-163.repo`
+ - `sudo mv CentOS7-Base-163.repo CentOS-Base.repo`
+ - 导入key：`rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7`
+ - `sudo yum clean all`
+ - `sudo yum makecache`
+ - `sudo yum update -y`
+
+## 第三方源
 
 > 加入第三方源主要是为了 yum 下载到官方没有提供的软件，在其他社区、第三方源里面有很多的软件包，有些软件是很好用的。CentOS 可以加入多个源，所以就存在一个源的优先级问题了，设置优先级的可以使用 yum-plugin-priorities 工具。一般我是建议官方的优先级是最高的，然后才是第三方的。
 
@@ -41,12 +52,13 @@
  - 一般默认的源配置里面 [base], [updates], [extras]，[centosplus] 的 priority=1， [contrib] 的 priority=2，其他第三的软件源为：priority=N （推荐 N > 10，N 可以为1到99的正整数，数值越小越优先）
  - `sudo vim /etc/yum.repos.d/CentOS-Base.repo`
  - 配置内容如下图
- - ![CentOS 默认源的级别设置](images/CentOS-Extra-Packages-a-1.jpg)
+ - ![CentOS 默认源的级别设置](../images/CentOS-Extra-Packages-a-1.jpg)
  
 - 安装 EPEL 源：
  - 官网中文材料：<https://fedoraproject.org/wiki/EPEL/zh-cn>
  - 安装命令：`sudo yum install -y epel-release`
- - 导入 KEY：`rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6`
+ - CentOS 6 导入 KEY：`rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6`
+ - CentOS 7 导入 KEY：`rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7`
  - 设置 EPEL 源的级别：`vim  /etc/yum.repos.d/epel.repo`，追加：priority=11
 - 卸载 EPEL 源
  - 如果你暂时不想使用 EPEL 源的话，把 epel.repo 里的 enabled=1 改成 enabled=0 即可，如果你完全不需要了，那就直接卸载掉 `sudo rpm -e epel-release`
@@ -58,7 +70,7 @@
  - 安装 RPM 文件：`sudo rpm -ivh rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm`
  - 导入 KEY：`sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-rpmforge-dag`
  - 设置 RepoForge 源的级别：`vim  /etc/yum.repos.d/rpmforge.repo`，设置如下图
- - ![RepoForge 源的级别设置](images/CentOS-Extra-Packages-a-2.jpg)
+ - ![RepoForge 源的级别设置](../images/CentOS-Extra-Packages-a-2.jpg)
  
 - 更新包信息：
  - `sudo yum clean all`
